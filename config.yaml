@@ -1,0 +1,24 @@
+postgres:
+  host: "localhost"
+  port: 5432
+  database: "cosmos_fees"
+  username: "postgres"
+  password: "postgres"
+  ssl: false
+  pool_size: 10
+
+server:
+  port: ":8080"
+
+chains:
+  cosmoshub-4:
+    name: "cosmos"
+    start_height: 29248000
+    rpc_base_url:
+      - "https://cosmos-rpc.highstakes.ch"
+      - "https://cosmos-rpc.ibs.team"
+    denom: "uatom"
+    batch_size: 100
+    retry_attempts: 3
+    retry_delay_ms: 1000
+
