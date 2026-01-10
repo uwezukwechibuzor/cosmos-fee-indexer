@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS blocks (
     id SERIAL PRIMARY KEY,
     block_number BIGINT NOT NULL,
     chain_id VARCHAR(100) NOT NULL,
-    timestamp TIMESTAMP NOT NULL,
+    timestamp BIGINT NOT NULL,
     total_fees VARCHAR(100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

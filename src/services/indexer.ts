@@ -109,7 +109,6 @@ export class CosmosFeeIndexer {
 
         if (blocks.length > 0) {
           // Save to database
-          console.log('blocks', blocks)
           await this.blockModel.insertBlocksBatch(blocks);
           await this.blockModel.updateIndexingState(this.chainId, batchEnd);
 
@@ -200,8 +199,9 @@ export class CosmosFeeIndexer {
         // Extract fees
         const totalFees = extractFeesFromBlock(blockResults, this.chainConfig.denom);
 
-        // Parse timestamp
-        const timestamp = new Date(blockInfo.timestamp);
+        // Parse timestamp and convert to Unix timestamp in seconds
+        const timestampDate = new Date(blockInfo.timestamp);
+        const timestamp = Math.floor(timestampDate.getTime() / 1000); // Convert to seconds
 
         return {
           block_number: height,

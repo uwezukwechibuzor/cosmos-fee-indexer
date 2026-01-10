@@ -21,7 +21,7 @@ export interface Attribute {
 
 export interface BlockData {
   block_number: number;
-  timestamp: Date;
+  timestamp: number; // Unix timestamp in seconds
   total_fees: string;
   chain_id: string;
 }
