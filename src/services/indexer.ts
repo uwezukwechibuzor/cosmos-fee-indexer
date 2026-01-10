@@ -8,7 +8,7 @@ import { logger } from '../utils/logger.js';
 export class CosmosFeeIndexer {
   private rpcClient: CosmosRPCClient;
   private blockModel: BlockModel;
-  private chainId: string;
+  public readonly chainId: string;
   private chainConfig: ChainConfig;
   private isRunning: boolean = false;
   private shouldStop: boolean = false;
@@ -69,9 +69,8 @@ export class CosmosFeeIndexer {
    */
   private async indexBlocks(): Promise<void> {
     // Get last indexed height or use start_height
-    let currentHeight =
-      (await this.blockModel.getLastIndexedHeight(this.chainId)) ||
-      this.chainConfig.start_height - 1;
+    const lastHeight = await this.blockModel.getLastIndexedHeight(this.chainId);
+    let currentHeight: number = lastHeight !== null ? lastHeight : this.chainConfig.start_height - 1;
 
     const batchSize = this.chainConfig.batch_size || 100;
     const retryAttempts = this.chainConfig.retry_attempts || 3;
@@ -110,6 +109,7 @@ export class CosmosFeeIndexer {
 
         if (blocks.length > 0) {
           // Save to database
+          console.log('blocks', blocks)
           await this.blockModel.insertBlocksBatch(blocks);
           await this.blockModel.updateIndexingState(this.chainId, batchEnd);
 
@@ -146,7 +146,7 @@ export class CosmosFeeIndexer {
   ): Promise<BlockData[]> {
     const blocks: BlockData[] = [];
 
-    // Process blocks in parallel
+    // Process multiple blocks in parallel
     const concurrency = 10;
     for (let height = startHeight; height <= endHeight; height += concurrency) {
       const batchPromises: Promise<void>[] = [];
@@ -191,7 +191,7 @@ export class CosmosFeeIndexer {
 
     for (let attempt = 0; attempt < retryAttempts; attempt++) {
       try {
-        // Fetch block results and block info in parallel
+        // Fetch block results and block info in parallel for better performance
         const [blockResults, blockInfo] = await Promise.all([
           this.rpcClient.getBlockResults(height),
           this.rpcClient.getBlock(height),

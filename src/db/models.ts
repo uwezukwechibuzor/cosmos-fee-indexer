@@ -54,13 +54,15 @@ export class BlockModel {
       WHERE chain_id = $1
     `;
 
-    const result = await this.db.query<{ last_indexed_height: number }>(query, [chainId]);
+    const result = await this.db.query<{ last_indexed_height: number | string }>(query, [chainId]);
 
     if (result.rows.length === 0) {
       return null;
     }
 
-    return result.rows[0].last_indexed_height;
+    // PostgreSQL BIGINT returns as string, convert to number
+    const height = result.rows[0].last_indexed_height;
+    return typeof height === 'string' ? parseInt(height, 10) : height;
   }
 
   async updateIndexingState(chainId: string, height: number): Promise<void> {

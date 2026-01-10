@@ -13,12 +13,11 @@ server:
 chains:
   cosmoshub-4:
     name: "cosmos"
-    start_height: 29248000
+    start_height: 29248064
     rpc_base_url:
-      - "https://cosmos-rpc.highstakes.ch"
-      - "https://cosmos-rpc.ibs.team"
+      - "https://cosmos-rpc.polkachu.com"
     denom: "uatom"
-    batch_size: 100
+    batch_size: 5
     retry_attempts: 3
     retry_delay_ms: 1000
 

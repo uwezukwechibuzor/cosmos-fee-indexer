@@ -53,8 +53,16 @@ async function main() {
     process.on('SIGINT', () => shutdown('SIGINT'));
     process.on('SIGTERM', () => shutdown('SIGTERM'));
 
-    // Start all indexers
-    await Promise.all(indexers.map((indexer) => indexer.start()));
+    // Start all indexers in parallel with independent error handling
+    // Each chain runs independently, so one failure doesn't stop others
+    const indexerPromises = indexers.map((indexer) =>
+      indexer.start().catch((error) => {
+        logger.error({ error, chainId: indexer.chainId }, 'Indexer failed but continuing with other chains');
+        // Don't throw - let other chains continue
+      })
+    );
+
+    await Promise.all(indexerPromises);
   } catch (error) {
     logger.error({ error }, 'Fatal error in main');
     process.exit(1);
