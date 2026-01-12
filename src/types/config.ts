@@ -16,7 +16,6 @@ export interface ChainConfig {
   name: string;
   start_height: number;
   rpc_base_url: string[];
-  denom: string;
   batch_size?: number;
   retry_attempts?: number;
   retry_delay_ms?: number;

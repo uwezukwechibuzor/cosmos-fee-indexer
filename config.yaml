@@ -16,7 +16,6 @@ chains:
     start_height: 29248064
     rpc_base_url:
       - "https://cosmos-rpc.polkachu.com"
-    denom: "uatom"
     batch_size: 5
     retry_attempts: 3
     retry_delay_ms: 1000

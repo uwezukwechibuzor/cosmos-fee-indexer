@@ -197,7 +197,7 @@ export class CosmosFeeIndexer {
         ]);
 
         // Extract fees
-        const totalFees = extractFeesFromBlock(blockResults, this.chainConfig.denom);
+        const totalFees = extractFeesFromBlock(blockResults);
 
         // Parse timestamp and convert to Unix timestamp in seconds
         const timestampDate = new Date(blockInfo.timestamp);
