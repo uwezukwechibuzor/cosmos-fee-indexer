@@ -83,5 +83,61 @@ export class BlockModel {
     const result = await this.db.query<{ count: string }>(query, [chainId]);
     return parseInt(result.rows[0].count, 10);
   }
+
+  /**
+   * Get total fees by time range
+   * @param chainId - Chain identifier
+   * @param startTime - Start timestamp (Unix timestamp in seconds)
+   * @param endTime - End timestamp (Unix timestamp in seconds)
+   * @returns Array of total_fees strings for blocks in the time range
+   */
+  async getFeesByTimeRange(
+    chainId: string,
+    startTime: number,
+    endTime: number
+  ): Promise<string[]> {
+    const query = `
+      SELECT total_fees 
+      FROM blocks 
+      WHERE chain_id = $1 
+        AND timestamp >= $2 
+        AND timestamp <= $3
+      ORDER BY block_number
+    `;
+    const result = await this.db.query<{ total_fees: string }>(query, [
+      chainId,
+      startTime,
+      endTime,
+    ]);
+    return result.rows.map((row) => row.total_fees);
+  }
+
+  /**
+   * Get total fees by block range
+   * @param chainId - Chain identifier
+   * @param startHeight - Start block height
+   * @param endHeight - End block height
+   * @returns Array of total_fees strings for blocks in the height range
+   */
+  async getFeesByBlockRange(
+    chainId: string,
+    startHeight: number,
+    endHeight: number
+  ): Promise<string[]> {
+    const query = `
+      SELECT total_fees 
+      FROM blocks 
+      WHERE chain_id = $1 
+        AND block_number >= $2 
+        AND block_number <= $3
+      ORDER BY block_number
+    `;
+    const result = await this.db.query<{ total_fees: string }>(query, [
+      chainId,
+      startHeight,
+      endHeight,
+    ]);
+    return result.rows.map((row) => row.total_fees);
+  }
 }
 

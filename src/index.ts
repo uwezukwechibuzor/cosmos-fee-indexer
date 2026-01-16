@@ -4,6 +4,7 @@ import { DatabaseClient } from './db/client.js';
 import { BlockModel } from './db/models.js';
 import { CosmosRPCClient } from './services/cosmos-rpc.js';
 import { CosmosFeeIndexer } from './services/indexer.js';
+import { ApiServer } from './api/server.js';
 import { logger } from './utils/logger.js';
 
 // Load environment variables
@@ -30,6 +31,10 @@ async function main() {
     // Initialize models
     const blockModel = new BlockModel(db);
 
+    // Start API server
+    const apiServer = new ApiServer(blockModel, appConfig);
+    await apiServer.start();
+
     // Process each chain
     const indexers: CosmosFeeIndexer[] = [];
 
@@ -46,6 +51,7 @@ async function main() {
     const shutdown = async (signal: string) => {
       logger.info({ signal }, 'Received shutdown signal');
       indexers.forEach((indexer) => indexer.stop());
+      await apiServer.stop();
       await db.close();
       process.exit(0);
     };

@@ -8,7 +8,7 @@ postgres:
   pool_size: 10
 
 server:
-  port: ":8080"
+  port: "3000"
 
 chains:
   cosmoshub-4:

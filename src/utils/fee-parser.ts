@@ -67,3 +67,29 @@ function parseFeeValue(value: string, feesByDenom: Map<string, number>): void {
     }
   }
 }
+
+/**
+ * Aggregates fees from multiple total_fees strings (from database)
+ * Parses strings like "427uatom,198ibc/..." and sums amounts by denom
+ * Returns a map of denom -> total amount
+ */
+export function aggregateFeesByDenom(totalFeesStrings: string[]): Record<string, number> {
+  const feesByDenom = new Map<string, number>();
+
+  for (const totalFeesStr of totalFeesStrings) {
+    if (!totalFeesStr || totalFeesStr === '0') {
+      continue;
+    }
+
+    // Parse the stored format (e.g., "427uatom,198ibc/...")
+    parseFeeValue(totalFeesStr, feesByDenom);
+  }
+
+  // Convert map to plain object
+  const result: Record<string, number> = {};
+  for (const [denom, amount] of feesByDenom.entries()) {
+    result[denom] = amount;
+  }
+
+  return result;
+}
