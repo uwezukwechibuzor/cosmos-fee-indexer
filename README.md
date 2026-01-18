@@ -63,7 +63,6 @@ chains:
     rpc_base_url:
       - "https://cosmos-rpc.highstakes.ch"
       - "https://cosmos-rpc.ibs.team"
-    denom: "uatom"
     batch_size: 100
 ```
 
