@@ -19,4 +19,11 @@ chains:
     batch_size: 5
     retry_attempts: 3
     retry_delay_ms: 1000
-
+  agoric:
+    name: "agoric"
+    start_height: 23674816
+    rpc_base_url:
+      - "https://agoric-rpc.polkachu.com"
+    batch_size: 5
+    retry_attempts: 3
+    retry_delay_ms: 1000
